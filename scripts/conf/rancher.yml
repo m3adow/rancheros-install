@@ -1,3 +1,0 @@
-cloud_init:
-  datasources:
-    - file:/var/lib/rancher/conf/user_config.yml
