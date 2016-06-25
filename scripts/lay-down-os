@@ -66,7 +66,8 @@ create_boot_dirs()
 }
 
 install_grub() {
-    grub-install --boot-directory=${BASE_DIR}/boot ${DEVICE}
+    #grub-install --boot-directory=${BASE_DIR}/boot ${DEVICE}
+    grub-install --root-directory=${BASE_DIR} ${DEVICE}
 }
 
 grub2_config(){
