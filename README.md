@@ -1,13 +1,29 @@
-#os-installer: Installs RancherOS
+# RancherOS installer script
+
+This script is intended to install RancherOS from a rescue/recovery OS.  
+**Usage:**
+```bash
+# Get the script
+wget -O- https://github.com/m3adow/rancheros-installer/archive/master.tar.gz | tar mxzv
+# Usage
+./rancheros-installer/rancheros-install.sh DEVICE "cloud-config link"
+# Practical example
+./rancheros-installer/rancheros-install.sh /dev/sdb "https://cloud.local/myhost.yml"
+```
+---
+---
+# Original README
+
+##os-installer: Installs RancherOS
 -----
 
-##Purpose:
+###Purpose:
 
 This repository provides scripts for the container used to install RancherOS.
 
 The container can be used directly, but there is a wrapper in RancherOS, `/usr/sbin/rancheros-install`, that handles calling things in the right order. If you just want to disect it, start with the rancheros-install script and look in here to see what is being called.
 
-##Basics
+###Basics
 
 When booting from the ISO file RancherOS runs completely from memory. In order to run more containers, and save state between reboots, you need to persist and run from disk. 
 
@@ -32,7 +48,7 @@ The amazon-ebs approach follows these steps:
 
 
 
-## Usage
+### Usage
 
 **Warning:** Using this container directly can be like running with scissors...
 
@@ -54,13 +70,13 @@ By providing `-i` (or `DIST` env var) you specify the path to your custom `vmlin
   
 `-f` allows you to copy arbitrary files to the target root filesystem.
 
-## Contact
+### Contact
 For bugs, questions, comments, corrections, suggestions, etc., open an issue in
  [rancher/os](//github.com/rancher/os/issues) with a title starting with `[os-installer] `.
 
 Or just [click here](//github.com/rancher/os/issues/new?title=%5Bos-installer%5D%20) to create a new issue.
 
-## License
+### License
 Copyright (c) 2014-2015 [Rancher Labs, Inc.](http://rancher.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
