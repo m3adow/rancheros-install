@@ -12,9 +12,11 @@ set -u
 # Globals
 DEBIAN_FRONTEND=noninteractive
 RANCHEROS_VERSION=${RANCHEROS_VERSION:-"v0.4.5"}
-RANCHER_ENV="generic"
+RANCHER_ENV="${RANCHER_ENV:-generic}"
 
+MYPWD="$(dirname $0)"
 RANCHER_DEV="${1}"
+CLOUD_CONFIG_URL="${2:-}"
 
 parted_remove_partition() {
   for PARTITION in $(parted -sm ${RANCHER_DEV} print|grep -oE '^[0-9]+:')
@@ -30,8 +32,9 @@ parted_create_partition() {
 
 # Workaround for older wget versions
 wget_download() {
-  wget -q $1 \
-  || wget -q --no-check-certificate $1
+  WGET_ARGS=${2:-}
+  wget -q $WGET_ARGS $1 \
+  || wget -q $WGET_ARGS --no-check-certificate $1
 }
 
 prepare_system() {
@@ -47,32 +50,21 @@ _EOF_
   parted_remove_partition
   parted_create_partition
 
-  MYDIR=$(mktemp -p /tmp/ -d XXXXXX)
-  cd ${MYDIR}
+  wget_download "https://releases.rancher.com/os/latest/initrd" "-O ${MYPWD}/scripts/"
+  wget_download "https://releases.rancher.com/os/latest/vmlinuz" "-O ${MYPWD}/scripts/"
 
-  wget_download https://releases.rancher.com/os/latest/initrd
-  wget_download https://releases.rancher.com/os/latest/vmlinuz
+  if [ -n "${CLOUD_CONFIG_URL}" ]
+  then
+    wget_download "${CLOUD_CONFIG_URL}" "-O ${MYPWD}/scripts/user_config.yml"
+  fi
 }
 
-while getopts "i:f:c:d:t:r:o:p:" OPTION
-do
-    case $OPTION in 
-        i) DIST="$OPTARG" ;;
-        f) FILES="$OPTARG" ;;
-        c) CLOUD_CONFIG="$OPTARG" ;;
-        d) DEVICE="$OPTARG" ;;
-        o) OEM="$OPTARG" ;;
-        p) PARTITION="$OPTARG" ;;
-        r) ROLLBACK_VERSION="$OPTARG" ;;
-        t) ENV="$OPTARG" ;;
-        *) exit 1 ;;
-    esac
-done
-
-DIST=${DIST:-/dist}
-BASE_DIR="/mnt/new_img"
-# TODO: Change this to a number so that users can specify.
-# Will need to make it so that our builds and packer APIs remain consistent.
-PARTITION=${PARTITION:=${DEVICE}1}
 
 prepare_system
+cd ${MYPWD}/scripts
+if [ -n "${CLOUD_CONFIG_URL}" ]
+then
+  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -c ./user_config.yml -i "${MYPWD}" 
+else
+  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -i "${MYPWD}
+fi

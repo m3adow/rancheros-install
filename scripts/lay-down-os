@@ -147,7 +147,7 @@ if [ -n ${ENV} ]; then
         "generic")
             format_and_mount
             install_grub
-            /scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
+            ${DIST}/scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
             ;;
         "amazon-ebs-pv"|"amazon-ebs-hvm")
             format_and_mount
@@ -155,12 +155,12 @@ if [ -n ${ENV} ]; then
                 install_grub
             fi
             # AWS Networking recommends disabling.
-            /scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
+            ${DIST}/scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
             ;;
         "googlecompute")
             format_and_mount
             install_grub
-            /scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
+            ${DIST}/scripts/seed-data $BASE_DIR $CLOUD_CONFIG $FILES
             ;;
         "bootstrap")
             mount_device true
