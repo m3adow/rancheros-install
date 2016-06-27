@@ -47,24 +47,24 @@ _EOF_
   apt-get update && apt-get install -y grub2 parted ca-certificates
 
 
-  parted_remove_partition
-  parted_create_partition
+  #parted_remove_partition
+  #parted_create_partition
+  ${MYPWD}/scripts/set-disk-partitions ${RANCHER_DEV}
 
-  wget_download "https://releases.rancher.com/os/latest/initrd" "-O ${MYPWD}/scripts/"
-  wget_download "https://releases.rancher.com/os/latest/vmlinuz" "-O ${MYPWD}/scripts/"
+  wget_download "https://releases.rancher.com/os/latest/initrd" "-O ${MYPWD}/scripts/initrd"
+  wget_download "https://releases.rancher.com/os/latest/vmlinuz" "-O ${MYPWD}/scripts/vmlinuz"
 
   if [ -n "${CLOUD_CONFIG_URL}" ]
   then
-    wget_download "${CLOUD_CONFIG_URL}" "-O ${MYPWD}/scripts/user_config.yml"
+    wget_download "${CLOUD_CONFIG_URL}" "-O ${MYPWD}/user_config.yml"
   fi
 }
 
 
 prepare_system
-cd ${MYPWD}/scripts
 if [ -n "${CLOUD_CONFIG_URL}" ]
 then
-  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -c ./user_config.yml -i "${MYPWD}" 
+  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -c ${MYPWD}/user_config.yml -i "${MYPWD}" -t "${RANCHER_ENV}"
 else
-  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -i "${MYPWD}
+  ${MYPWD}/scripts/lay-down-os -d ${RANCHER_DEV} -i "${MYPWD}" -t "${RANCHER_ENV}"
 fi
