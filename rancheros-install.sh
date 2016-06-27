@@ -51,8 +51,8 @@ _EOF_
   #parted_create_partition
   ${MYPWD}/scripts/set-disk-partitions ${RANCHER_DEV}
 
-  wget_download "https://releases.rancher.com/os/latest/initrd" "-O ${MYPWD}/scripts/initrd"
-  wget_download "https://releases.rancher.com/os/latest/vmlinuz" "-O ${MYPWD}/scripts/vmlinuz"
+  wget_download "https://releases.rancher.com/os/latest/initrd" "-O ${MYPWD}/initrd"
+  wget_download "https://releases.rancher.com/os/latest/vmlinuz" "-O ${MYPWD}/vmlinuz"
 
   if [ -n "${CLOUD_CONFIG_URL}" ]
   then
