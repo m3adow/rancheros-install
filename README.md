@@ -1,6 +1,6 @@
 # RancherOS installer script
 
-This script is intended to install RancherOS from a rescue/recovery OS.  
+This script is intended to install RancherOS from a rescue/recovery OS when not being able to load or mount ISOs (e.g. for many virtual server providers).
 **Usage:**
 ```bash
 # Get the script
